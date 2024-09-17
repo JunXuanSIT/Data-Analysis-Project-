@@ -1,41 +1,54 @@
-# Import necessary libraries
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
-# Read the Excel file (make sure the file path is correct)
-# The `engine='openpyxl'` parameter ensures the correct engine is used for .xlsx files
-file_path = 'your_excel_file.xlsx'
-df = pd.read_excel(file_path, engine='openpyxl')
+# Hide the root Tkinter window
+Tk().withdraw()
 
-# Preview the data (check the first 5 rows)
+# Prompt the user to select the file
+file_path = askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
+if not file_path:
+    raise FileNotFoundError("No file selected")
+
+# Load the data, skipping the first two rows
+df = pd.read_excel(file_path, header=None, skiprows=[0, 1])
+
+# Print out the first few rows and the columns to check the data
+print("First few rows of the DataFrame:")
 print(df.head())
 
-# Check column names
+print("\nColumns available in the DataFrame:")
 print(df.columns)
 
-# Example: Plot a graph of two columns
-# Replace 'Column1' and 'Column2' with the actual column names in your Excel file
-plt.figure(figsize=(10, 6))
-sns.scatterplot(x='Column1', y='Column2', data=df)
+# Manually set the correct headers
+headers = [
+    'responses', 'time taken survey in mins', 'Gender', 'Birth Year',
+    'Mobile Phone Plan', 'Mobile Service Provider', 'Satisfaction with Plan Options',
+    'Satisfaction with Reception', 'Satisfaction with Customer Service',
+    'Action in Case of Outage', 'Biggest Factor for Changing Provider',
+    'Aspect for Improvement'
+]
 
-# Set labels and title
-plt.xlabel('Column1')
-plt.ylabel('Column2')
-plt.title('Scatter Plot of Column1 vs Column2')
+# Set the headers
+df.columns = headers
 
-# Show the plot
-plt.show()
+# Drop any rows that have NaN in 'Birth Year' or 'time taken survey in mins'
+df['Birth Year'] = pd.to_numeric(df['Birth Year'], errors='coerce')
+df_clean = df.dropna(subset=['Birth Year', 'time taken survey in mins'])
 
-# Example: Bar plot for a categorical column
-# Replace 'CategoryColumn' and 'NumericColumn' with actual column names
-plt.figure(figsize=(10, 6))
-sns.barplot(x='CategoryColumn', y='NumericColumn', data=df)
+# Ensure 'Birth Year' is integer type
+df_clean['Birth Year'] = df_clean['Birth Year'].astype(int)
 
-# Set labels and title
-plt.xlabel('Category')
-plt.ylabel('Value')
-plt.title('Bar Plot of Categories')
+# Aggregate data: Calculate average survey time per birth year
+agg_df = df_clean.groupby('Birth Year')['time taken survey in mins'].mean().reset_index()
 
-# Show the plot
+# Plotting the bar graph
+plt.figure(figsize=(12, 6))
+sns.barplot(x='Birth Year', y='time taken survey in mins', data=agg_df)
+plt.title('Average Survey Time by Birth Year')
+plt.xlabel('Birth Year')
+plt.ylabel('Average Time Taken Survey in Mins')
+plt.xticks(rotation=45)  # Rotate x labels for better readability
 plt.show()
