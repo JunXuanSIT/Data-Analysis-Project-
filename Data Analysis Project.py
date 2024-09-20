@@ -27,8 +27,8 @@ file_path = askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
 if not file_path:
     raise FileNotFoundError("No file selected")
 
-# Load the data, skipping the first two rows
-df = pd.read_excel(file_path, header=None, skiprows=[0, 1])
+# Load the data, skipping the second row, and obtain df header columns
+df = pd.read_excel(file_path, header=0, skiprows=[1])
 
 # Print out the first few rows and the columns to check the data
 print("First few rows of the DataFrame:")
@@ -37,21 +37,11 @@ print(df.head())
 print("\nColumns available in the DataFrame:")
 print(df.columns)
 
-# Manually set the correct headers
-headers = [
-    'responses', 'time taken survey in mins', 'Gender', 'Birth Year',
-    'Mobile Phone Plan', 'Mobile Service Provider', 'Satisfaction with Plan Options',
-    'Satisfaction with Reception', 'Satisfaction with Customer Service',
-    'Action in Case of Outage', 'Biggest Factor for Changing Provider',
-    'Aspect for Improvement'
-]
+headersToCleanData = ['Biggest Factor for Changing Provider', 'Aspect for Improvement']
 
-# Set the headers
-df.columns = headers
-
-# Apply the function to both 'Biggest Factor for Changing Provider' and 'Aspect for Improvement'
-df = replace_invalid_responses(df, 'Biggest Factor for Changing Provider')
-df = replace_invalid_responses(df, 'Aspect for Improvement')
+# clean data for open-ended header questions
+for header in headersToCleanData:
+    df = replace_invalid_responses(df, header)
 
 # Drop any rows that have NaN in 'Birth Year' or 'time taken survey in mins'
 df['Birth Year'] = pd.to_numeric(df['Birth Year'], errors='coerce')
