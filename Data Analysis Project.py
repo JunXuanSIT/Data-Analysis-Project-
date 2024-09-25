@@ -78,3 +78,25 @@ plt.show()
 
 # Call the function to allow the user to save the cleaned data
 save_cleaned_data(df_clean)
+
+# Load the Excel file
+df = pd.read_excel(file_path)
+
+# Assuming the column with MCQ responses is named 'MCQ_Responses', adjust as necessary
+valid_responses = range(0, 6)  # Valid responses are 0-5
+
+# Find the rows with invalid responses
+invalid_responses = ~df['MCQ_Responses'].isin(valid_responses)
+
+# Calculate the average of the valid responses
+average_response = df[df['MCQ_Responses'].isin(valid_responses)]['MCQ_Responses'].mean()
+
+# Replace invalid responses with the average
+df.loc[invalid_responses, 'MCQ_Responses'] = average_response
+
+# Save the updated data to a new Excel file (or overwrite the existing file)
+df.to_excel('updated_excel_file.xlsx', index=False)
+
+print("Invalid responses have been replaced with the average value.")
+
+
