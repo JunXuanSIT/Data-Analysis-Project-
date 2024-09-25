@@ -1,0 +1,325 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.4" author="PygubuDesigner 0.39.3">
+  <project>
+    <settings>
+      <setting id="name">DataAnalysisGUI</setting>
+      <setting id="description">DataAnalysisGUI</setting>
+      <setting id="module_name">DataAnalysisGUI</setting>
+      <setting id="template">codescript</setting>
+      <setting id="main_widget">mainWindow</setting>
+      <setting id="main_classname">DataAnalysisGUI</setting>
+      <setting id="main_menu" />
+      <setting id="output_dir" />
+      <setting id="output_dir2" />
+      <setting id="import_tkvariables">False</setting>
+      <setting id="use_ttk_styledefinition_file">False</setting>
+      <setting id="use_i18n">False</setting>
+      <setting id="all_ids_attributes">False</setting>
+      <setting id="generate_code_onsave">False</setting>
+      <setting id="use_window_centering_code">False</setting>
+      <setting id="ttk_style_definition_file" />
+    </settings>
+    <customwidgets />
+  </project>
+  <object class="tk.Tk" id="mainWindow" named="True">
+    <property name="geometry">480x400</property>
+    <property name="overrideredirect">false</property>
+    <property name="resizable">none</property>
+    <property name="takefocus">true</property>
+    <property name="title" translatable="yes">Data Analysis Application</property>
+    <child>
+      <object class="ttk.Frame" id="fileFrame" named="True">
+        <property name="borderwidth">2</property>
+        <property name="cursor">arrow</property>
+        <property name="width">200</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="ttk.Label" id="frameTtitle" named="True">
+            <property name="compound">top</property>
+            <property name="cursor">arrow</property>
+            <property name="font">TkDefaultFont</property>
+            <property name="justify">left</property>
+            <property name="text" translatable="yes">Survey Responses Data File</property>
+            <layout manager="pack">
+              <property name="pady">5</property>
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="openFileBtn" named="True">
+            <property name="command" type="command" cbtype="simple">openFile</property>
+            <property name="compound">top</property>
+            <property name="cursor">arrow</property>
+            <property name="default">active</property>
+            <property name="state">normal</property>
+            <property name="takefocus">false</property>
+            <property name="text" translatable="yes">Open File</property>
+            <layout manager="pack">
+              <property name="padx">20</property>
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Label" id="fileNameLabel" named="True">
+            <property name="relief">flat</property>
+            <property name="text" translatable="yes">No file selected.</property>
+            <property name="textvariable">string:fileName</property>
+            <layout manager="pack">
+              <property name="padx">10</property>
+              <property name="side">left</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="optionFrame" named="True">
+        <property name="borderwidth">2</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="ttk.Label" id="frameTitle" named="True">
+            <property name="compound">top</property>
+            <property name="text" translatable="yes">Input Parameters</property>
+            <layout manager="pack">
+              <property name="side">top</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Labelframe" id="optionSubFrame1" named="True">
+            <property name="text" translatable="yes">Spreadsheet data range</property>
+            <property name="width">200</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="pady">5</property>
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="label1">
+                <property name="cursor">arrow</property>
+                <property name="font">TkTextFont</property>
+                <property name="justify">left</property>
+                <property name="takefocus">false</property>
+                <property name="text" translatable="yes">Table header
+row number</property>
+                <layout manager="pack">
+                  <property name="padx">5</property>
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry1">
+                <property name="exportselection">true</property>
+                <property name="font">TkDefaultFont</property>
+                <property name="state">normal</property>
+                <property name="takefocus">false</property>
+                <property name="textvariable">string:headerRowNum</property>
+                <property name="width">5</property>
+                <layout manager="pack">
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label2">
+                <property name="compound">top</property>
+                <property name="cursor">based_arrow_down</property>
+                <property name="justify">left</property>
+                <property name="text" translatable="yes">First data
+row</property>
+                <layout manager="pack">
+                  <property name="padx">5</property>
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry2">
+                <property name="exportselection">true</property>
+                <property name="font">TkDefaultFont</property>
+                <property name="state">normal</property>
+                <property name="takefocus">false</property>
+                <property name="textvariable">string:firstRow</property>
+                <property name="width">5</property>
+                <layout manager="pack">
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label3">
+                <property name="compound">top</property>
+                <property name="cursor">based_arrow_down</property>
+                <property name="justify">left</property>
+                <property name="relief">flat</property>
+                <property name="state">normal</property>
+                <property name="takefocus">false</property>
+                <property name="text" translatable="yes">First data
+column</property>
+                <layout manager="pack">
+                  <property name="padx">5</property>
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry3">
+                <property name="exportselection">true</property>
+                <property name="font">TkDefaultFont</property>
+                <property name="state">normal</property>
+                <property name="takefocus">false</property>
+                <property name="textvariable">string:firstColumn</property>
+                <property name="width">5</property>
+                <layout manager="pack">
+                  <property name="side">left</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Labelframe" id="optionSubFrame2" named="True">
+            <property name="text" translatable="yes">Data parsing options</property>
+            <property name="width">200</property>
+            <layout manager="pack">
+              <property name="fill">x</property>
+              <property name="pady">5</property>
+              <property name="side">top</property>
+            </layout>
+            <child>
+              <object class="ttk.Frame" id="frame1">
+                <property name="width">200</property>
+                <layout manager="pack">
+                  <property name="fill">x</property>
+                  <property name="side">top</property>
+                </layout>
+                <child>
+                  <object class="ttk.Label" id="label4">
+                    <property name="text" translatable="yes">Remove duplicate entries</property>
+                    <layout manager="pack">
+                      <property name="padx">10</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radiobutton1">
+                    <property name="compound">top</property>
+                    <property name="cursor">arrow</property>
+                    <property name="takefocus">false</property>
+                    <property name="text" translatable="yes">Yes</property>
+                    <property name="value">True</property>
+                    <property name="variable">boolean:removeDuplicates</property>
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radiobutton2">
+                    <property name="text" translatable="yes">No</property>
+                    <property name="value">False</property>
+                    <property name="variable">boolean:removeDuplicates</property>
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Frame" id="frame2">
+                <property name="width">200</property>
+                <layout manager="pack">
+                  <property name="fill">x</property>
+                  <property name="side">top</property>
+                </layout>
+                <child>
+                  <object class="ttk.Label" id="label5">
+                    <property name="text" translatable="yes">Analyze "nil"/"N.A."
+open-ended responses</property>
+                    <layout manager="pack">
+                      <property name="padx">10</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radiobutton3">
+                    <property name="compound">top</property>
+                    <property name="cursor">arrow</property>
+                    <property name="takefocus">false</property>
+                    <property name="text" translatable="yes">Yes</property>
+                    <property name="value">True</property>
+                    <property name="variable">boolean:parseNilNaResp</property>
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radiobutton4">
+                    <property name="text" translatable="yes">No</property>
+                    <property name="value">False</property>
+                    <property name="variable">boolean:parseNilNaResp</property>
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="buttonFrame" named="True">
+        <property name="borderwidth">2</property>
+        <layout manager="pack">
+          <property name="fill">x</property>
+          <property name="pady">5</property>
+          <property name="side">top</property>
+        </layout>
+        <child>
+          <object class="ttk.Button" id="aboutProgramBtn" named="True">
+            <property name="command" type="command" cbtype="simple">aboutProgram</property>
+            <property name="text" translatable="yes">About Program</property>
+            <layout manager="pack">
+              <property name="padx">2</property>
+              <property name="side">right</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="analyzeDataBtn" named="True">
+            <property name="command" type="command" cbtype="simple">analyzeData</property>
+            <property name="compound">top</property>
+            <property name="cursor">arrow</property>
+            <property name="default">normal</property>
+            <property name="state">normal</property>
+            <property name="takefocus">false</property>
+            <property name="text" translatable="yes">Analyze Data</property>
+            <layout manager="pack">
+              <property name="padx">2</property>
+              <property name="side">right</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
