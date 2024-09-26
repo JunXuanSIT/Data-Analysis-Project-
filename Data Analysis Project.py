@@ -16,10 +16,12 @@ def save_cleaned_data(df):
     else:
         print("Save operation cancelled.")
 
-# Function to replace "nil", "NIL", "N.A.", "n.a.", "IDK", "idk", "Nil" with "No concerns expressed"
+# Function to convert text responses to lowercase and replace invalid responses
 def replace_invalid_responses(df, column_name):
-    replace_values = ["nil", "NIL", "N.A.", "n.a.", "IDK", "idk", "Nil"]
-    df[column_name] = df[column_name].replace(replace_values, "No concerns expressed")
+    replace_values = ["nil", "n.a.", "idk"]
+    if column_name in df.columns:
+        # Convert to lowercase and replace invalid responses
+        df[column_name] = df[column_name].str.lower().replace(replace_values, "No concerns expressed")
     return df
 
 # Prompt the user to select the file
@@ -30,17 +32,11 @@ if not file_path:
 # Load the data, skipping the second row, and obtain df header columns
 df = pd.read_excel(file_path, header=0, skiprows=[1])
 
-# Print out the first few rows and the columns to check the data
-print("First few rows of the DataFrame:")
-print(df.head())
+# Define the columns to clean and lower text for open-ended questions
+headers_to_clean = ['Biggest Factor for Changing Provider', 'Aspect for Improvement', 'Biggest Area of Improvement']
 
-print("\nColumns available in the DataFrame:")
-print(df.columns)
-
-headersToCleanData = ['Biggest Factor for Changing Provider', 'Aspect for Improvement']
-
-# clean data for open-ended header questions
-for header in headersToCleanData:
+# Clean data for open-ended header questions
+for header in headers_to_clean:
     df = replace_invalid_responses(df, header)
 
 # Drop any rows that have NaN in 'Birth Year' or 'time taken survey in mins'
@@ -50,13 +46,14 @@ df_clean = df.dropna(subset=['Birth Year', 'time taken survey in mins'])
 # Ensure 'Birth Year' is integer type
 df_clean['Birth Year'] = df_clean['Birth Year'].astype(int)
 
-# Dropping rows based off duplicate values in column S/N
-df_clean = df_clean.drop_duplicates(subset=['S/N'])
+# Dropping rows based on duplicate values in column 'S/N', but only if 'S/N' exists
+if 'S/N' in df_clean.columns:
+    df_clean = df_clean.drop_duplicates(subset=['S/N'])
 
 # Aggregate data: Calculate average survey time per birth year
 agg_df = df_clean.groupby('Birth Year')['time taken survey in mins'].mean().reset_index()
 
-# Plotting the bar graph
+# Plotting the bar graph for Average Survey Time by Birth Year
 plt.figure(figsize=(12, 6))
 sns.barplot(x='Birth Year', y='time taken survey in mins', data=agg_df)
 plt.title('Average Survey Time by Birth Year')
@@ -70,7 +67,7 @@ plt.show()
 unique_providers = df_clean['Mobile Service Provider'].nunique()
 explode = [0.05] * unique_providers  # Create a list of 0.05 for each unique provider
 
-# Plot the pie chart
+# Plot the pie chart for Mobile Service Provider distribution
 plt.figure(figsize=(8, 8))
 df_clean['Mobile Service Provider'].value_counts().plot.pie(
     autopct='%1.1f%%', startangle=90, colors=sns.color_palette('Set3'), explode=explode
