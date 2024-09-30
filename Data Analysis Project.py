@@ -1,3 +1,4 @@
+import sys
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -9,31 +10,70 @@ Tk().withdraw()
 
 # Function to prompt the user to select a file for saving the data
 def save_cleaned_data(df):
-    save_path = asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx;*.xls")])
-    if save_path:
-        df.to_excel(save_path, index=False)
-        print(f"Cleaned data has been saved to {save_path}")
-    else:
-        print("Save operation cancelled.")
+    while True:
+        save_path = asksaveasfilename(
+            defaultextension=".xlsx",
+            filetypes=[("Excel files", "*.xlsx;*.xls"), ("CSV files", "*.csv")]
+        )
+        if not save_path:
+            print("Save operation cancelled.")
+            return
+        if save_path.lower().endswith(('.xlsx', '.xls', '.csv')):
+            try:
+                if save_path.lower().endswith('.csv'):
+                    df.to_csv(save_path, index=False)
+                else:
+                    df.to_excel(save_path, index=False)
+                print(f"Cleaned data has been saved to {save_path}")
+                break
+            except Exception as e:
+                print(f"Error saving file: {e}")
+                print("Please try saving the file again.")
+        else:
+            print("Invalid file type selected. Please select an Excel or CSV file.")
 
 # Function to convert text responses to lowercase and replace invalid responses
 def replace_invalid_responses(df, column_name):
-    replace_values = ["nil", "n.a.", "idk"]
+    replace_values = {"nil", "n.a.", "idk", "na"}
     if column_name in df.columns:
-        # Convert to lowercase and replace invalid responses
-        df[column_name] = df[column_name].str.lower().replace(replace_values, "No concerns expressed")
+        # Convert to lowercase
+        df[column_name] = df[column_name].str.lower()
+        # Replace invalid responses
+        df[column_name] = df[column_name].replace(replace_values, "No concerns expressed")
     return df
 
-# Prompt the user to select the file
-file_path = askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
-if not file_path:
-    raise FileNotFoundError("No file selected")
+# Function to load data with checks
+def load_data():
+    while True:
+        file_path = askopenfilename(
+            filetypes=[("Excel files", "*.xlsx;*.xls"), ("CSV files", "*.csv")]
+        )
+        if not file_path:
+            print("File selection cancelled.")
+            return None
+        try:
+            if file_path.lower().endswith(('.xlsx', '.xls')):
+                df = pd.read_excel(file_path, header=0, skiprows=[1])
+            elif file_path.lower().endswith('.csv'):
+                df = pd.read_csv(file_path, header=0, skiprows=[1])
+            else:
+                print("Invalid file type selected. Please select an Excel or CSV file.")
+                continue
+            return df
+        except Exception as e:
+            print(f"Error loading file: {e}. Please try again.")
 
-# Load the data, skipping the second row, and obtain df header columns
-df = pd.read_excel(file_path, header=0, skiprows=[1])
+# Load the data with checks
+df = load_data()
+if df is None:
+    sys.exit()  # Exit the program if no file is selected
 
 # Define the columns to clean and lower text for open-ended questions
-headers_to_clean = ['Biggest Factor for Changing Provider', 'Aspect for Improvement', 'Biggest Area of Improvement']
+headers_to_clean = [
+    'Biggest Factor for Changing Provider',
+    'Aspect for Improvement',
+    'Biggest Area of Improvement'
+]
 
 # Clean data for open-ended header questions
 for header in headers_to_clean:
@@ -60,6 +100,7 @@ plt.title('Average Survey Time by Birth Year')
 plt.xlabel('Birth Year')
 plt.ylabel('Average Time Taken Survey in Mins')
 plt.xticks(rotation=45)  # Rotate x labels for better readability
+plt.tight_layout()
 plt.show()
 
 # Visualization: Pie chart for 'Mobile Service Provider'
@@ -74,6 +115,7 @@ df_clean['Mobile Service Provider'].value_counts().plot.pie(
 )
 plt.title('Distribution of Mobile Service Providers')
 plt.ylabel('')  # Hide the y-label to make the chart cleaner
+plt.tight_layout()
 plt.show()
 
 # Call the function to allow the user to save the cleaned data
