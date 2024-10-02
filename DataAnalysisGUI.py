@@ -5,20 +5,22 @@ import DataAnalysisGUI_ui as baseui
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.messagebox import showinfo, showerror
 
-from Global_Variables import *
+import Global_Variables as glo_vars
 import Data_Analysis_Main as main_program
-import MCQ_Cleaning as mcq_cleaning
+#import MCQ_Cleaning as mcq_cleaning
 
 class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
     def __init__(self, master=None):
         super().__init__(master)
 
+        glo_vars.excel_file_path = ""
+
     def openFile(self):
-        excel_file_path = askopenfilename(
-            filetypes=[("Excel files", "*.xlsx;*.xls"), ("CSV files", "*.csv")]
+        glo_vars.excel_file_path = askopenfilename(
+            filetypes=[("Excel *.xlsx;*.xls"), ("CSV files", "*.csv")]
         )
-        filepath_onGUI = excel_file_path[excel_file_path.rfind('/')+1:] #format the file path string for GUI display
-        if excel_file_path == "":
+        filepath_onGUI = glo_vars.excel_file_path[glo_vars.excel_file_path.rfind('/')+1:] #format the file path string for GUI display
+        if glo_vars.excel_file_path == "":
             app.fileName.set("No file selected")
         else:
             app.fileName.set(filepath_onGUI)
@@ -28,7 +30,7 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
 
     def analyzeData(self):
         #throw error message and halt function if self.file-path is empty. same applies if text fields are empty
-        if self.file_path == "":
+        if glo_vars.excel_file_path == "":
             showerror(message="No file selected!")
             return
 
@@ -36,7 +38,7 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message="No spreadsheet data range is specified!")
             return
 
-        #get sheet data table selection; table header row, start of table coordinates
+        #get spreadsheet table header row, first data row and first data column
         try:
             headerRowNum = int(app.headerRowNum.get())
             dataFirstRow = int(app.firstRow.get())
@@ -44,6 +46,9 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
 
             if headerRowNum <= 0 or dataFirstRow <= 0 or dataFirstCol <= 0:
                 showerror(message="Spreadsheet row & column numbers must be greater than 0.")
+                return           
+            if headerRowNum >= dataFirstRow:
+                showerror(message="Spreadsheet header row is below or the same the first data row!")
                 return
         
         except ValueError:
@@ -51,10 +56,27 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             return
 
         #get int value for graph output type
-        graphsOutputType = app.genGraphsOutputType
+        graphsOutputType = app.genGraphsOutputType.get()
+        print(f"Graph output type selection: {graphsOutputType}")
 
-        print(f"Responses file path is {excel_file_path}.\nSpreadsheet header row is {headerRowNum}; data table first row is {dataFirstRow}; data table first col is {dataFirstCol}.\nGraph output type selection: {graphsOutputType}")
+        #parse spreadsheet to obtain data frame, df
+        result = main_program.parse_data(headerRowNum, dataFirstRow)       
+        if result != "success":
+            showerror(message=result)
+            return
 
+        #data frame headers of open-ended responses to clean and lowercase
+        openEndedRespHeaders = ['Biggest Factor for Changing Provider', 'Aspect for Improvement']
+
+        # Clean data for open-ended header questions
+        for header in openEndedRespHeaders:
+            result = main_program.replace_invalid_responses(header)
+            if result != "success":
+                showerror(message=result)
+                return
+
+        print(glo_vars.df.head())
+        
 if __name__ == "__main__":
     app = DataAnalysisGUI()
     app.run()

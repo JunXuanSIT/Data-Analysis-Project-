@@ -3,11 +3,43 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from tkinter import Tk
-from tkinter.filedialog import askopenfilename, asksaveasfilename
+from tkinter.filedialog import asksaveasfilename
 
-# Hide the root Tkinter window
-Tk().withdraw()
+import Global_Variables as glo_vars
 
+# Function to parse excel with checks
+def parse_data(headerRow, firstDataRow):
+    rowsSkipped = []
+    for rowToSkip in range(0, firstDataRow-1): #initialze list of skipped rows, from 0 till the row above the first data row
+        rowsSkipped.append(rowToSkip)
+    rowsSkipped.pop(rowsSkipped.index(headerRow-1)) #remove the header row from skipped rows list
+
+    try:
+        if glo_vars.excel_file_path.lower().endswith(('.xlsx', '.xls')):
+            glo_vars.df = pd.read_excel(glo_vars.excel_file_path, header=(headerRow-1), skiprows=rowsSkipped)
+        elif glo_vars.excel_file_path.lower().endswith('.csv'):
+            glo_vars.df = pd.read_csv(glo_vars.excel_file_path, header=(headerRow-1), skiprows=rowsSkipped)
+
+        return "success"
+
+    except Exception as e:
+        return f"Error parsing spreadsheet with following error: {e}"
+    
+# Function to convert open-ended responses to lowercase and replace invalid responses
+def replace_invalid_responses(column_name):
+    replace_values = {"nil", "n.a.", "idk", "na"}
+    if column_name in glo_vars.df.columns:
+        try:
+            # Convert to lowercase
+            glo_vars.df[column_name] = glo_vars.df[column_name].str.lower()
+            # Replace invalid responses
+            glo_vars.df[column_name] = glo_vars.df[column_name].replace(replace_values, "No concerns expressed")
+
+            return "success"
+        except Exception as e:
+            return f"Error cleaning open-ended responses with following error: {e}"
+
+"""
 # Function to prompt the user to select a file for saving the data
 def save_cleaned_data(df):
     while True:
@@ -31,53 +63,6 @@ def save_cleaned_data(df):
                 print("Please try saving the file again.")
         else:
             print("Invalid file type selected. Please select an Excel or CSV file.")
-
-# Function to convert text responses to lowercase and replace invalid responses
-def replace_invalid_responses(df, column_name):
-    replace_values = {"nil", "n.a.", "idk", "na"}
-    if column_name in df.columns:
-        # Convert to lowercase
-        df[column_name] = df[column_name].str.lower()
-        # Replace invalid responses
-        df[column_name] = df[column_name].replace(replace_values, "No concerns expressed")
-    return df
-
-# Function to load data with checks
-def load_data():
-    while True:
-        file_path = askopenfilename(
-            filetypes=[("Excel files", "*.xlsx;*.xls"), ("CSV files", "*.csv")]
-        )
-        if not file_path:
-            print("File selection cancelled.")
-            return None
-        try:
-            if file_path.lower().endswith(('.xlsx', '.xls')):
-                df = pd.read_excel(file_path, header=0, skiprows=[1])
-            elif file_path.lower().endswith('.csv'):
-                df = pd.read_csv(file_path, header=0, skiprows=[1])
-            else:
-                print("Invalid file type selected. Please select an Excel or CSV file.")
-                continue
-            return df
-        except Exception as e:
-            print(f"Error loading file: {e}. Please try again.")
-
-# Load the data with checks
-df = load_data()
-if df is None:
-    sys.exit()  # Exit the program if no file is selected
-
-# Define the columns to clean and lower text for open-ended questions
-headers_to_clean = [
-    'Biggest Factor for Changing Provider',
-    'Aspect for Improvement',
-    'Biggest Area of Improvement'
-]
-
-# Clean data for open-ended header questions
-for header in headers_to_clean:
-    df = replace_invalid_responses(df, header)
 
 # Drop any rows that have NaN in 'Birth Year' or 'time taken survey in mins'
 df['Birth Year'] = pd.to_numeric(df['Birth Year'], errors='coerce')
@@ -120,3 +105,4 @@ plt.show()
 
 # Call the function to allow the user to save the cleaned data
 save_cleaned_data(df_clean)
+"""
