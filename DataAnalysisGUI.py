@@ -1,26 +1,27 @@
 #!/usr/bin/python3
 import tkinter as tk
 import tkinter.ttk as ttk
-import DataAnalysisGUIui as baseui
+import DataAnalysisGUI_ui as baseui
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from tkinter.messagebox import showinfo, showerror
 
-class DataAnalysisGUI(baseui.DataAnalysisGUIUI):
+from Global_Variables import *
+import Data_Analysis_Main as main_program
+import MCQ_Cleaning as mcq_cleaning
+
+class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
     def __init__(self, master=None):
         super().__init__(master)
 
-        #global variables delclare here...
-        self.file_path = ""
-
     def openFile(self):
-        filepath = askopenfilename(filetypes=[("Excel files", "*.xlsx;*.xls")])
-        filepath = filepath[filepath.rfind('/')+1:]
-        if filepath == "":
+        excel_file_path = askopenfilename(
+            filetypes=[("Excel files", "*.xlsx;*.xls"), ("CSV files", "*.csv")]
+        )
+        filepath_onGUI = excel_file_path[excel_file_path.rfind('/')+1:] #format the file path string for GUI display
+        if excel_file_path == "":
             app.fileName.set("No file selected")
-            self.file_path = ""
         else:
-            app.fileName.set(filepath)
-            self.file_path = filepath
+            app.fileName.set(filepath_onGUI)
 
     def aboutProgram(self):
         showinfo(title="About", message="A program to extract survey responses data from Excel spreadsheets.\n\nIt parses and cleans the spreadsheet data, then analyzes the responses' patterns. In the end, it generates visualizations such as charts and tables.")
@@ -49,13 +50,10 @@ class DataAnalysisGUI(baseui.DataAnalysisGUIUI):
             showerror(message="Spreadsheet row & column numbers must be an integer greater than 0.")
             return
 
-        #get boolean value of removing duplicate entry
-        removeDuplicates = app.removeDuplicates.get()
+        #get int value for graph output type
+        graphsOutputType = app.genGraphsOutputType
 
-        #get boolean value of parsing nil and N.A. responses in open-ended questions
-        parseNilNaResp = app.parseNilNaResp.get()
-
-        print(f"Responses file path is {self.file_path}.\nSpreadsheet header row is {headerRowNum}; data table first row is {dataFirstRow}; data table first col is {dataFirstCol}.\nTo remove duplicate entries: {removeDuplicates}.\nTo parse \"N.A.\" and \"nil\" open-ended responses: {parseNilNaResp}.")
+        print(f"Responses file path is {excel_file_path}.\nSpreadsheet header row is {headerRowNum}; data table first row is {dataFirstRow}; data table first col is {dataFirstCol}.\nGraph output type selection: {graphsOutputType}")
 
 if __name__ == "__main__":
     app = DataAnalysisGUI()

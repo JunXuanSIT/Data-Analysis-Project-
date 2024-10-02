@@ -22,11 +22,10 @@
     <customwidgets />
   </project>
   <object class="tk.Tk" id="mainWindow" named="True">
-    <property name="geometry">480x400</property>
     <property name="overrideredirect">false</property>
     <property name="resizable">none</property>
     <property name="takefocus">true</property>
-    <property name="title" translatable="yes">Data Analysis Application</property>
+    <property name="title" translatable="yes">Survey Responses Grapher</property>
     <child>
       <object class="ttk.Frame" id="fileFrame" named="True">
         <property name="borderwidth">2</property>
@@ -84,15 +83,6 @@
           <property name="fill">x</property>
           <property name="side">top</property>
         </layout>
-        <child>
-          <object class="ttk.Label" id="frameTitle" named="True">
-            <property name="compound">top</property>
-            <property name="text" translatable="yes">Input Parameters</property>
-            <layout manager="pack">
-              <property name="side">top</property>
-            </layout>
-          </object>
-        </child>
         <child>
           <object class="ttk.Labelframe" id="optionSubFrame1" named="True">
             <property name="text" translatable="yes">Spreadsheet data range</property>
@@ -188,7 +178,7 @@ column</property>
         </child>
         <child>
           <object class="ttk.Labelframe" id="optionSubFrame2" named="True">
-            <property name="text" translatable="yes">Data parsing options</property>
+            <property name="text" translatable="yes">Graph output options</property>
             <property name="width">200</property>
             <layout manager="pack">
               <property name="fill">x</property>
@@ -204,78 +194,47 @@ column</property>
                 </layout>
                 <child>
                   <object class="ttk.Label" id="label4">
-                    <property name="text" translatable="yes">Remove duplicate entries</property>
+                    <property name="text" translatable="yes">Generate graphs
+in form(s) of</property>
                     <layout manager="pack">
                       <property name="padx">10</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Radiobutton" id="radiobutton5">
+                    <property name="compound">top</property>
+                    <property name="text" translatable="yes">Images to
+export</property>
+                    <property name="value">0</property>
+                    <property name="variable">int:genGraphsOutputType</property>
+                    <layout manager="pack">
+                      <property name="padx">2</property>
                       <property name="side">left</property>
                     </layout>
                   </object>
                 </child>
                 <child>
                   <object class="ttk.Radiobutton" id="radiobutton1">
-                    <property name="compound">top</property>
-                    <property name="cursor">arrow</property>
-                    <property name="takefocus">false</property>
-                    <property name="text" translatable="yes">Yes</property>
-                    <property name="value">True</property>
-                    <property name="variable">boolean:removeDuplicates</property>
+                    <property name="text" translatable="yes">Display on 
+GUI window</property>
+                    <property name="value">1</property>
+                    <property name="variable">int:genGraphsOutputType</property>
                     <layout manager="pack">
-                      <property name="padx">5</property>
+                      <property name="padx">2</property>
                       <property name="side">left</property>
                     </layout>
                   </object>
                 </child>
                 <child>
-                  <object class="ttk.Radiobutton" id="radiobutton2">
-                    <property name="text" translatable="yes">No</property>
-                    <property name="value">False</property>
-                    <property name="variable">boolean:removeDuplicates</property>
+                  <object class="ttk.Radiobutton" id="radiobutton6">
+                    <property name="text" translatable="yes">Both 
+types</property>
+                    <property name="value">2</property>
+                    <property name="variable">int:genGraphsOutputType</property>
                     <layout manager="pack">
-                      <property name="padx">5</property>
-                      <property name="side">left</property>
-                    </layout>
-                  </object>
-                </child>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Frame" id="frame2">
-                <property name="width">200</property>
-                <layout manager="pack">
-                  <property name="fill">x</property>
-                  <property name="side">top</property>
-                </layout>
-                <child>
-                  <object class="ttk.Label" id="label5">
-                    <property name="text" translatable="yes">Analyze "nil"/"N.A."
-open-ended responses</property>
-                    <layout manager="pack">
-                      <property name="padx">10</property>
-                      <property name="side">left</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object class="ttk.Radiobutton" id="radiobutton3">
-                    <property name="compound">top</property>
-                    <property name="cursor">arrow</property>
-                    <property name="takefocus">false</property>
-                    <property name="text" translatable="yes">Yes</property>
-                    <property name="value">True</property>
-                    <property name="variable">boolean:parseNilNaResp</property>
-                    <layout manager="pack">
-                      <property name="padx">5</property>
-                      <property name="side">left</property>
-                    </layout>
-                  </object>
-                </child>
-                <child>
-                  <object class="ttk.Radiobutton" id="radiobutton4">
-                    <property name="text" translatable="yes">No</property>
-                    <property name="value">False</property>
-                    <property name="variable">boolean:parseNilNaResp</property>
-                    <layout manager="pack">
-                      <property name="padx">5</property>
+                      <property name="padx">2</property>
                       <property name="side">left</property>
                     </layout>
                   </object>

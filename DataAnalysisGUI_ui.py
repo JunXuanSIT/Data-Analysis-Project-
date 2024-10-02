@@ -3,15 +3,14 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 
-class DataAnalysisGUIUI:
+class DataAnalysisGUI_UI:
     def __init__(self, master=None):
         # build ui
         self.mainWindow = tk.Tk(master)
         self.mainWindow.configure(takefocus=True)
-        self.mainWindow.geometry("480x400")
         self.mainWindow.overrideredirect("false")
         self.mainWindow.resizable(False, False)
-        self.mainWindow.title("Data Analysis Application")
+        self.mainWindow.title("Survey Responses Grapher")
         self.fileFrame = ttk.Frame(self.mainWindow, name="fileframe")
         self.fileFrame.configure(borderwidth=2, cursor="arrow", width=200)
         self.frameTtitle = ttk.Label(self.fileFrame, name="framettitle")
@@ -42,9 +41,6 @@ class DataAnalysisGUIUI:
         self.fileFrame.pack(fill="x", side="top")
         self.optionFrame = ttk.Frame(self.mainWindow, name="optionframe")
         self.optionFrame.configure(borderwidth=2)
-        self.frameTitle = ttk.Label(self.optionFrame, name="frametitle")
-        self.frameTitle.configure(compound="top", text='Input Parameters')
-        self.frameTitle.pack(side="top")
         self.optionSubFrame1 = ttk.Labelframe(
             self.optionFrame, name="optionsubframe1")
         self.optionSubFrame1.configure(
@@ -107,51 +103,33 @@ class DataAnalysisGUIUI:
         self.optionSubFrame1.pack(fill="x", pady=5, side="top")
         self.optionSubFrame2 = ttk.Labelframe(
             self.optionFrame, name="optionsubframe2")
-        self.optionSubFrame2.configure(text='Data parsing options', width=200)
+        self.optionSubFrame2.configure(text='Graph output options', width=200)
         frame1 = ttk.Frame(self.optionSubFrame2)
         frame1.configure(width=200)
         label4 = ttk.Label(frame1)
-        label4.configure(text='Remove duplicate entries')
+        label4.configure(text='Generate graphs\nin form(s) of')
         label4.pack(padx=10, side="left")
+        radiobutton5 = ttk.Radiobutton(frame1)
+        self.genGraphsOutputType = tk.IntVar(value=0)
+        radiobutton5.configure(
+            compound="top",
+            text='Images to\nexport',
+            value=0,
+            variable=self.genGraphsOutputType)
+        radiobutton5.pack(padx=2, side="left")
         radiobutton1 = ttk.Radiobutton(frame1)
-        self.removeDuplicates = tk.BooleanVar(value=True)
         radiobutton1.configure(
-            compound="top",
-            cursor="arrow",
-            takefocus=False,
-            text='Yes',
-            value=True,
-            variable=self.removeDuplicates)
-        radiobutton1.pack(padx=5, side="left")
-        radiobutton2 = ttk.Radiobutton(frame1)
-        radiobutton2.configure(
-            text='No',
-            value=False,
-            variable=self.removeDuplicates)
-        radiobutton2.pack(padx=5, side="left")
+            text='Display on \nGUI window',
+            value=1,
+            variable=self.genGraphsOutputType)
+        radiobutton1.pack(padx=2, side="left")
+        radiobutton6 = ttk.Radiobutton(frame1)
+        radiobutton6.configure(
+            text='Both \ntypes',
+            value=2,
+            variable=self.genGraphsOutputType)
+        radiobutton6.pack(padx=2, side="left")
         frame1.pack(fill="x", side="top")
-        frame2 = ttk.Frame(self.optionSubFrame2)
-        frame2.configure(width=200)
-        label5 = ttk.Label(frame2)
-        label5.configure(text='Analyze "nil"/"N.A."\nopen-ended responses')
-        label5.pack(padx=10, side="left")
-        radiobutton3 = ttk.Radiobutton(frame2)
-        self.parseNilNaResp = tk.BooleanVar(value=True)
-        radiobutton3.configure(
-            compound="top",
-            cursor="arrow",
-            takefocus=False,
-            text='Yes',
-            value=True,
-            variable=self.parseNilNaResp)
-        radiobutton3.pack(padx=5, side="left")
-        radiobutton4 = ttk.Radiobutton(frame2)
-        radiobutton4.configure(
-            text='No',
-            value=False,
-            variable=self.parseNilNaResp)
-        radiobutton4.pack(padx=5, side="left")
-        frame2.pack(fill="x", side="top")
         self.optionSubFrame2.pack(fill="x", pady=5, side="top")
         self.optionFrame.pack(fill="x", side="top")
         self.buttonFrame = ttk.Frame(self.mainWindow, name="buttonframe")
@@ -191,5 +169,5 @@ class DataAnalysisGUIUI:
 
 
 if __name__ == "__main__":
-    app = DataAnalysisGUIUI()
+    app = DataAnalysisGUI_UI()
     app.run()
