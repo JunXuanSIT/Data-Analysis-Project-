@@ -5,7 +5,7 @@ import os
 
 import Global_Variables as glo_var
 
-def JX_MCQ_Cleaning():
+def MCQ_Cleaning():
 
     # Now 'selected_columns' contains the columns the user selected
     """
@@ -18,6 +18,10 @@ def JX_MCQ_Cleaning():
     
     --kok peng
     """
+    # retrieving dataframe from global var
+    df = glo_var.df
+    # retrieving mcqQuestions list from global var
+    selected_columns = glo_var.mcqQuestions
 
     if selected_columns:
         mcq_columns = selected_columns
@@ -42,5 +46,5 @@ def JX_MCQ_Cleaning():
                 df.loc[invalid_responses, col] = average_response
             else:
                 print(f"Column '{col}' not found in the file.")
-
-JX_MCQ_Cleaning()
+        # Reset global var dataframe to the cleaned df
+        glo_var.df = df
