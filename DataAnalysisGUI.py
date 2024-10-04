@@ -15,6 +15,8 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
 
         glo_vars.excel_file_path = ""
 
+        showinfo(title="Instructions", message=glo_vars.instructions)
+
     def openFile(self):
         glo_vars.excel_file_path = askopenfilename(
             filetypes=[("Excel *.xlsx;*.xls"), ("CSV files", "*.csv")]
@@ -25,8 +27,11 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
         else:
             app.fileName.set(filepath_onGUI)
 
+    def showInstructions(self):
+        showinfo(title="Instructions", message=glo_vars.instructions)
+
     def aboutProgram(self):
-        showinfo(title="About", message="A program to extract survey responses data from Excel spreadsheets.\n\nIt parses and cleans the spreadsheet data, then analyzes the responses' patterns. In the end, it generates visualizations such as charts and tables.")
+        showinfo(title="About", message=glo_vars.aboutMessage)
 
     def analyzeData(self):
         #throw error message and halt function if self.file-path is empty. same applies if text fields are empty
@@ -34,22 +39,18 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message="No file selected!")
             return
 
-        if app.headerRowNum.get() == "" or app.firstRow.get() == "" or app.firstColumn.get() == "":
+        if app.firstRow.get() == "" or app.firstCol.get() == "":
             showerror(message="No spreadsheet data range is specified!")
             return
 
-        #get spreadsheet table header row, first data row and first data column
+        #get spreadsheet table header row, first data row, first data column and question type row
         try:
-            headerRowNum = int(app.headerRowNum.get())
             dataFirstRow = int(app.firstRow.get())
-            dataFirstCol = int(app.firstColumn.get())
+            dataFirstCol = int(app.firstCol.get())
 
-            if headerRowNum <= 0 or dataFirstRow <= 0 or dataFirstCol <= 0:
+            if dataFirstRow <= 0 or dataFirstCol <= 0:
                 showerror(message="Spreadsheet row & column numbers must be greater than 0.")
                 return           
-            if headerRowNum >= dataFirstRow:
-                showerror(message="Spreadsheet header row is below or the same the first data row!")
-                return
         
         except ValueError:
             showerror(message="Spreadsheet row & column numbers must be an integer greater than 0.")
@@ -60,20 +61,16 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
         print(f"Graph output type selection: {graphsOutputType}")
 
         #parse spreadsheet to obtain data frame, df
-        result = main_program.parse_data(headerRowNum, dataFirstRow)       
+        result = main_program.parse_data(dataFirstRow, dataFirstCol)       
         if result != "success":
             showerror(message=result)
             return
 
-        #data frame headers of open-ended responses to clean and lowercase
-        openEndedRespHeaders = ['Biggest Factor for Changing Provider', 'Aspect for Improvement']
-
-        # Clean data for open-ended header questions
-        for header in openEndedRespHeaders:
-            result = main_program.replace_invalid_responses(header)
-            if result != "success":
-                showerror(message=result)
-                return
+        # Clean data for open-ended questions
+        result = main_program.clean_open_ended_responses()
+        if result != "success":
+            showerror(message=result)
+            return 
 
         print(glo_vars.df.head())
         

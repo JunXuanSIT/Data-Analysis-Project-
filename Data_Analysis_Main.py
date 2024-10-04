@@ -8,36 +8,57 @@ from tkinter.filedialog import asksaveasfilename
 import Global_Variables as glo_vars
 
 # Function to parse excel with checks
-def parse_data(headerRow, firstDataRow):
+def parse_data(firstDataRow, firstDataCol):
     rowsSkipped = []
-    for rowToSkip in range(0, firstDataRow-1): #initialze list of skipped rows, from 0 till the row above the first data row
+    for rowToSkip in range(2, firstDataRow-1): #initialze list of skipped rows, in between the header and question type row (rows 0 and 1) and the first data row
         rowsSkipped.append(rowToSkip)
-    rowsSkipped.pop(rowsSkipped.index(headerRow-1)) #remove the header row from skipped rows list
+
+    colsSkipped = []
+    for colToSkip in range(0, firstDataCol-1):
+        colsSkipped.append(colToSkip)
 
     try:
+        #open excel spreadsheet, create data frame and remove unwanted rows
         if glo_vars.excel_file_path.lower().endswith(('.xlsx', '.xls')):
-            glo_vars.df = pd.read_excel(glo_vars.excel_file_path, header=(headerRow-1), skiprows=rowsSkipped)
+            glo_vars.df = pd.read_excel(glo_vars.excel_file_path, header=0, skiprows=rowsSkipped)
         elif glo_vars.excel_file_path.lower().endswith('.csv'):
-            glo_vars.df = pd.read_csv(glo_vars.excel_file_path, header=(headerRow-1), skiprows=rowsSkipped)
+            glo_vars.df = pd.read_csv(glo_vars.excel_file_path, header=0, skiprows=rowsSkipped)
 
+        #remove unwanted cols
+        glo_vars.df = glo_vars.df.drop(glo_vars.df.columns[colsSkipped], axis=1)
+
+        #get the question type row and group all the question headers into the question type
+        headersList = list(glo_vars.df.columns.values)
+        questionTypeList = list(glo_vars.df.iloc[0].values)
+
+        typeIndex = 0
+        for type in questionTypeList:
+            if type.lower() == "multiple choice":
+                glo_vars.mcqQuestions.append(headersList[typeIndex])
+            elif type.lower() == "open ended":
+                glo_vars.openEndedQuestions.append(headersList[typeIndex])
+            typeIndex += 1
+
+        #remove the question type row
+        glo_vars.df = glo_vars.df.drop(axis=0, labels=[0])
         return "success"
 
     except Exception as e:
         return f"Error parsing spreadsheet with following error: {e}"
     
 # Function to convert open-ended responses to lowercase and replace invalid responses
-def replace_invalid_responses(column_name):
+def clean_open_ended_responses():
     replace_values = {"nil", "n.a.", "idk", "na"}
-    if column_name in glo_vars.df.columns:
-        try:
+    try:
+        for questionHeader in glo_vars.openEndedQuestions:
             # Convert to lowercase
-            glo_vars.df[column_name] = glo_vars.df[column_name].str.lower()
+            glo_vars.df[questionHeader] = glo_vars.df[questionHeader].str.lower()
             # Replace invalid responses
-            glo_vars.df[column_name] = glo_vars.df[column_name].replace(replace_values, "No concerns expressed")
-
-            return "success"
-        except Exception as e:
-            return f"Error cleaning open-ended responses with following error: {e}"
+            glo_vars.df[questionHeader] = glo_vars.df[questionHeader].replace(replace_values, "No concerns expressed")
+        return "success"
+    
+    except Exception as e:
+        return f"Error cleaning open-ended responses with following error: {e}"
 
 """
 # Function to prompt the user to select a file for saving the data
