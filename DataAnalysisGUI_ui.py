@@ -45,61 +45,49 @@ class DataAnalysisGUI_UI:
             self.optionFrame, name="optionsubframe1")
         self.optionSubFrame1.configure(
             text='Spreadsheet data range', width=200)
-        label1 = ttk.Label(self.optionSubFrame1)
+        frame2 = ttk.Frame(self.optionSubFrame1)
+        frame2.configure(height=200, width=200)
+        label1 = ttk.Label(frame2)
         label1.configure(
-            cursor="arrow",
             font="TkTextFont",
             justify="left",
             takefocus=False,
-            text='Table header\nrow number')
-        label1.pack(padx=5, side="left")
-        entry1 = ttk.Entry(self.optionSubFrame1)
-        self.headerRowNum = tk.StringVar()
-        entry1.configure(
-            exportselection=True,
-            font="TkDefaultFont",
-            state="normal",
-            takefocus=False,
-            textvariable=self.headerRowNum,
-            width=5)
-        entry1.pack(side="left")
-        label2 = ttk.Label(self.optionSubFrame1)
-        label2.configure(
-            compound="top",
-            cursor="based_arrow_down",
-            justify="left",
             text='First data\nrow')
-        label2.pack(padx=5, side="left")
-        entry2 = ttk.Entry(self.optionSubFrame1)
+        label1.pack(padx=5, side="left")
+        entry1 = ttk.Entry(frame2)
         self.firstRow = tk.StringVar()
-        entry2.configure(
+        entry1.configure(
             exportselection=True,
             font="TkDefaultFont",
             state="normal",
             takefocus=False,
             textvariable=self.firstRow,
             width=5)
-        entry2.pack(side="left")
-        label3 = ttk.Label(self.optionSubFrame1)
-        label3.configure(
+        entry1.pack(side="left")
+        label2 = ttk.Label(frame2)
+        label2.configure(
             compound="top",
-            cursor="based_arrow_down",
             justify="left",
-            relief="flat",
-            state="normal",
-            takefocus=False,
-            text='First data\ncolumn')
-        label3.pack(padx=5, side="left")
-        entry3 = ttk.Entry(self.optionSubFrame1)
-        self.firstColumn = tk.StringVar()
-        entry3.configure(
+            text='First data \ncolumn')
+        label2.pack(padx=5, side="left")
+        entry2 = ttk.Entry(frame2)
+        self.firstCol = tk.StringVar()
+        entry2.configure(
             exportselection=True,
             font="TkDefaultFont",
             state="normal",
             takefocus=False,
-            textvariable=self.firstColumn,
+            textvariable=self.firstCol,
             width=5)
-        entry3.pack(side="left")
+        entry2.pack(side="left")
+        frame2.pack(fill="x", side="top")
+        frame4 = ttk.Frame(self.optionSubFrame1)
+        frame4.configure(height=200, width=200)
+        label6 = ttk.Label(frame4)
+        label6.configure(
+            text='Note: Ensure spreadsheet headers are on the first row.')
+        label6.pack(side="top")
+        frame4.pack(fill="x", side="top")
         self.optionSubFrame1.pack(fill="x", pady=5, side="top")
         self.optionSubFrame2 = ttk.Labelframe(
             self.optionFrame, name="optionsubframe2")
@@ -134,22 +122,18 @@ class DataAnalysisGUI_UI:
         self.optionFrame.pack(fill="x", side="top")
         self.buttonFrame = ttk.Frame(self.mainWindow, name="buttonframe")
         self.buttonFrame.configure(borderwidth=2)
-        self.aboutProgramBtn = ttk.Button(
-            self.buttonFrame, name="aboutprogrambtn")
-        self.aboutProgramBtn.configure(text='About Program')
-        self.aboutProgramBtn.pack(padx=2, side="right")
-        self.aboutProgramBtn.configure(command=self.aboutProgram)
-        self.analyzeDataBtn = ttk.Button(
-            self.buttonFrame, name="analyzedatabtn")
-        self.analyzeDataBtn.configure(
-            compound="top",
-            cursor="arrow",
-            default="normal",
-            state="normal",
-            takefocus=False,
-            text='Analyze Data')
-        self.analyzeDataBtn.pack(padx=2, side="right")
-        self.analyzeDataBtn.configure(command=self.analyzeData)
+        button2 = ttk.Button(self.buttonFrame)
+        button2.configure(text='About Program')
+        button2.pack(padx=2, side="right")
+        button2.configure(command=self.aboutProgram)
+        button1 = ttk.Button(self.buttonFrame)
+        button1.configure(text='How to use')
+        button1.pack(padx=2, side="right")
+        button1.configure(command=self.showInstructions)
+        button3 = ttk.Button(self.buttonFrame)
+        button3.configure(text='Analyze Data')
+        button3.pack(padx=2, side="right")
+        button3.configure(command=self.analyzeData)
         self.buttonFrame.pack(fill="x", pady=5, side="top")
 
         # Main widget
@@ -162,6 +146,9 @@ class DataAnalysisGUI_UI:
         pass
 
     def aboutProgram(self):
+        pass
+
+    def showInstructions(self):
         pass
 
     def analyzeData(self):

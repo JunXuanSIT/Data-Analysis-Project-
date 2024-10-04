@@ -93,85 +93,80 @@
               <property name="side">top</property>
             </layout>
             <child>
-              <object class="ttk.Label" id="label1">
-                <property name="cursor">arrow</property>
-                <property name="font">TkTextFont</property>
-                <property name="justify">left</property>
-                <property name="takefocus">false</property>
-                <property name="text" translatable="yes">Table header
-row number</property>
+              <object class="ttk.Frame" id="frame2">
+                <property name="height">200</property>
+                <property name="width">200</property>
                 <layout manager="pack">
-                  <property name="padx">5</property>
-                  <property name="side">left</property>
+                  <property name="fill">x</property>
+                  <property name="side">top</property>
                 </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Entry" id="entry1">
-                <property name="exportselection">true</property>
-                <property name="font">TkDefaultFont</property>
-                <property name="state">normal</property>
-                <property name="takefocus">false</property>
-                <property name="textvariable">string:headerRowNum</property>
-                <property name="width">5</property>
-                <layout manager="pack">
-                  <property name="side">left</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Label" id="label2">
-                <property name="compound">top</property>
-                <property name="cursor">based_arrow_down</property>
-                <property name="justify">left</property>
-                <property name="text" translatable="yes">First data
+                <child>
+                  <object class="ttk.Label" id="label1">
+                    <property name="font">TkTextFont</property>
+                    <property name="justify">left</property>
+                    <property name="takefocus">false</property>
+                    <property name="text" translatable="yes">First data
 row</property>
-                <layout manager="pack">
-                  <property name="padx">5</property>
-                  <property name="side">left</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Entry" id="entry2">
-                <property name="exportselection">true</property>
-                <property name="font">TkDefaultFont</property>
-                <property name="state">normal</property>
-                <property name="takefocus">false</property>
-                <property name="textvariable">string:firstRow</property>
-                <property name="width">5</property>
-                <layout manager="pack">
-                  <property name="side">left</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Label" id="label3">
-                <property name="compound">top</property>
-                <property name="cursor">based_arrow_down</property>
-                <property name="justify">left</property>
-                <property name="relief">flat</property>
-                <property name="state">normal</property>
-                <property name="takefocus">false</property>
-                <property name="text" translatable="yes">First data
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Entry" id="entry1">
+                    <property name="exportselection">true</property>
+                    <property name="font">TkDefaultFont</property>
+                    <property name="state">normal</property>
+                    <property name="textvariable">string:firstRow</property>
+                    <property name="width">5</property>
+                    <layout manager="pack">
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Label" id="label2">
+                    <property name="compound">top</property>
+                    <property name="justify">left</property>
+                    <property name="text" translatable="yes">First data 
 column</property>
-                <layout manager="pack">
-                  <property name="padx">5</property>
-                  <property name="side">left</property>
-                </layout>
+                    <layout manager="pack">
+                      <property name="padx">5</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="ttk.Entry" id="entry2">
+                    <property name="exportselection">true</property>
+                    <property name="font">TkDefaultFont</property>
+                    <property name="state">normal</property>
+                    <property name="textvariable">string:firstCol</property>
+                    <property name="width">5</property>
+                    <layout manager="pack">
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
-              <object class="ttk.Entry" id="entry3">
-                <property name="exportselection">true</property>
-                <property name="font">TkDefaultFont</property>
-                <property name="state">normal</property>
-                <property name="takefocus">false</property>
-                <property name="textvariable">string:firstColumn</property>
-                <property name="width">5</property>
+              <object class="ttk.Frame" id="frame4">
+                <property name="height">200</property>
+                <property name="width">200</property>
                 <layout manager="pack">
-                  <property name="side">left</property>
+                  <property name="fill">x</property>
+                  <property name="side">top</property>
                 </layout>
+                <child>
+                  <object class="ttk.Label" id="label6">
+                    <property name="text" translatable="yes">Note: Ensure spreadsheet headers are on the first row.</property>
+                    <layout manager="pack">
+                      <property name="side">top</property>
+                    </layout>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -254,7 +249,7 @@ types</property>
           <property name="side">top</property>
         </layout>
         <child>
-          <object class="ttk.Button" id="aboutProgramBtn" named="True">
+          <object class="ttk.Button" id="button2">
             <property name="command" type="command" cbtype="simple">aboutProgram</property>
             <property name="text" translatable="yes">About Program</property>
             <layout manager="pack">
@@ -264,13 +259,18 @@ types</property>
           </object>
         </child>
         <child>
-          <object class="ttk.Button" id="analyzeDataBtn" named="True">
+          <object class="ttk.Button" id="button1">
+            <property name="command" type="command" cbtype="simple">showInstructions</property>
+            <property name="text" translatable="yes">How to use</property>
+            <layout manager="pack">
+              <property name="padx">2</property>
+              <property name="side">right</property>
+            </layout>
+          </object>
+        </child>
+        <child>
+          <object class="ttk.Button" id="button3">
             <property name="command" type="command" cbtype="simple">analyzeData</property>
-            <property name="compound">top</property>
-            <property name="cursor">arrow</property>
-            <property name="default">normal</property>
-            <property name="state">normal</property>
-            <property name="takefocus">false</property>
             <property name="text" translatable="yes">Analyze Data</property>
             <layout manager="pack">
               <property name="padx">2</property>
