@@ -7,7 +7,7 @@ from tkinter.messagebox import showinfo, showerror
 
 import Global_Variables as glo_vars
 import Data_Analysis_Main as main_program
-#import MCQ_Cleaning as mcq_cleaning
+import MCQ_Cleaning as MCQ_Cleaner
 
 class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
     def __init__(self, master=None):
@@ -71,9 +71,18 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
         if result != "success":
             showerror(message=result)
             return 
-
-        print(glo_vars.df.head())
         
+        """
+        # Clean MCQ data
+        result = MCQ_Cleaner.clean_mcq_data()  # <- Add this line to call the MCQ cleaning module
+        if result != "success":
+            showerror(message=result)
+            return
+        """
+        print(glo_vars.df)
+        
+        
+
 if __name__ == "__main__":
     app = DataAnalysisGUI()
     app.run()
