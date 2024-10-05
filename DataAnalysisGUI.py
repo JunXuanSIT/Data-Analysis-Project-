@@ -72,14 +72,13 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message=result)
             return 
         
-        """
         # Clean MCQ data
-        result = MCQ_Cleaner.clean_mcq_data()  # <- Add this line to call the MCQ cleaning module
+        result = MCQ_Cleaner.clean_mcq_data()  
         if result != "success":
             showerror(message=result)
             return
-        """
-        print(glo_vars.df)
+        
+        print(glo_vars.df.head())
         
         
 
