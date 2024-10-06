@@ -31,13 +31,27 @@ def parse_data(firstDataRow, firstDataCol):
         headersList = list(glo_vars.df.columns.values)
         questionTypeList = list(glo_vars.df.iloc[0].values)
 
+        # Initialize typeIndex
         typeIndex = 0
+
+        # Initialize found flags
+        found_mcq = False
+        found_open_ended = False
+
+        # Loop through the question types
         for type in questionTypeList:
             if type.lower() == "multiple choice":
                 glo_vars.mcqQuestions.append(headersList[typeIndex])
+                found_mcq = True  
             elif type.lower() == "open ended":
                 glo_vars.openEndedQuestions.append(headersList[typeIndex])
+                found_open_ended = True  
             typeIndex += 1
+
+        # After the loop, check if no valid question types were found
+        if not found_mcq and not found_open_ended:
+            raise ValueError("Error: No valid 'multiple choice' or 'open ended' question types found. Please ensure the types are either 'multiple choice' or 'open ended'.")
+
 
         #remove the question type row
         glo_vars.df = glo_vars.df.drop(axis=0, labels=[0])
