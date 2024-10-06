@@ -10,6 +10,8 @@ import Data_Analysis_Main as main_program
 import MCQ_Cleaning as MCQ_Cleaner
 import tempfile
 import os
+import subprocess
+import threading
 
 class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
     def __init__(self, master=None):
@@ -80,8 +82,8 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message=result)
             return
         
-        print(glo_vars.df.head())
-        
+        #print(glo_vars.df.head())
+        """ Activate for troubleshooting/testing purposes
         #Open a temporary excel file for viewing
         with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
             temp_file_path = temp_file.name
@@ -91,7 +93,21 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             os.startfile(temp_file_path)
         else:
             showinfo(message="Automatic Excel file opening is not supported on this OS. Please open the file manually.")
-     
+        """
+        
+        # Save the cleaned DataFrame to a temporary CSV file
+        temp_csv_path = os.path.join(tempfile.gettempdir(), "cleaned_data.csv")
+        glo_vars.df.to_csv(temp_csv_path, index=False)
+
+        # Run Streamlit
+        def run_streamlit():
+            subprocess.run(["streamlit", "run", "Output.py", "--", temp_csv_path])  # Pass the path to the cleaned data
+
+        streamlit_thread = threading.Thread(target=run_streamlit)
+        streamlit_thread.start()
+        
+
+        print (glo_vars.mcqQuestions)
             
 if __name__ == "__main__":
     app = DataAnalysisGUI()
