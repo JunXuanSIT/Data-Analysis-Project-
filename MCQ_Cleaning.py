@@ -12,19 +12,21 @@ def clean_mcq_data():
         return
 
     mcq_columns = selected_columns
-    #print(f"MCQ columns = {mcq_columns}")  # Print the selected columns
 
     # Perform data cleaning on selected columns
     try:
         for col in mcq_columns:
             if col in df.columns:
-                # Check if column is numeric or not
-                if pd.api.types.is_numeric_dtype(df[col]):
-                    # Handle numeric columns (0-5)
+                # Classify columns as numeric or string-based based on the column's contents
+                if pd.to_numeric(df[col], errors='coerce').notna().mean() > 0.5:
+                    # Column is classified as predominantly numeric
+                    print(f"Column '{col}' classified as numeric.")
+
+                    # Force the column to be numeric, converting non-numeric values to NaN
                     df[col] = pd.to_numeric(df[col], errors='coerce')
 
-                    # Define valid responses for numeric columns (0-5)
-                    valid_responses = range(0, 6)
+                    # Define valid responses for numeric columns (1-5)
+                    valid_responses = range(1, 6)
 
                     # Find rows with invalid responses
                     invalid_responses = ~df[col].isin(valid_responses)
@@ -36,28 +38,38 @@ def clean_mcq_data():
                         continue  # Skip the column if no valid data
 
                     average_response = round(valid_data.mean())
-                    print ({average_response})
+                    print(f"Replacing invalid responses in column '{col}' with average: {average_response}")
+
                     # Replace invalid responses with the average
                     df.loc[invalid_responses, col] = average_response
 
-                else:
-                    # Handle string-based columns
-                    # Replace empty strings with NaN
-                    df[col] = df[col].replace("", pd.NA)
+                    # Fill any remaining NaN values with the average before converting to int
+                    df[col] = df[col].fillna(average_response).astype(int)
 
-                    # Find rows with invalid responses (NaN)
+                else:
+                    # Column is classified as string-based
+                    print(f"Column '{col}' classified as string-based.")
+
+                    # Replace empty strings or numbers with NaN
+                    df[col] = df[col].replace("", pd.NA)
+                    df[col] = df[col].apply(lambda x: x if isinstance(x, str) else pd.NA)
+
+                    # Find rows with invalid responses (NaN or incorrect types)
                     invalid_responses = df[col].isna()
 
                     # Calculate the most common string (mode)
-                    mode_value = df[col].mode()[0]  # Mode returns a list, take the first one (most common)
+                    if not df[col].dropna().empty:
+                        mode_value = df[col].mode()[0]  # Mode returns a list, take the first one (most common)
+                        print(f"Replacing invalid responses in column '{col}' with the most common string: {mode_value}")
 
-                    # Replace invalid (NaN) responses with the most common string
-                    df.loc[invalid_responses, col] = mode_value
-
+                        # Replace invalid responses (NaN) with the most common string
+                        df.loc[invalid_responses, col] = mode_value
+                    else:
+                        print(f"No valid text responses in column '{col}', unable to determine most common value.")
             else:
                 print(f"Column '{col}' not found in the file.")
 
         return "success"
     
     except Exception as e:
-        return f"Error cleaning open-ended responses with following error: {e}"
+        return f"Error cleaning MCQ responses with the following error: {e}"

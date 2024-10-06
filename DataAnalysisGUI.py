@@ -82,7 +82,6 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message=result)
             return
         
-        #print(glo_vars.df.head())
         """ Activate for troubleshooting/testing purposes
         #Open a temporary excel file for viewing
         with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
@@ -94,6 +93,7 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
         else:
             showinfo(message="Automatic Excel file opening is not supported on this OS. Please open the file manually.")
         """
+
         
         # Save the cleaned DataFrame to a temporary CSV file
         temp_csv_path = os.path.join(tempfile.gettempdir(), "cleaned_data.csv")
