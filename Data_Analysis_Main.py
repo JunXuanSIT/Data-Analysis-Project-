@@ -50,7 +50,7 @@ def parse_data(firstDataRow, firstDataCol):
 
         # After the loop, check if no valid question types were found
         if not found_mcq and not found_open_ended:
-            raise ValueError("Error: No valid 'multiple choice' or 'open ended' question types found. Please ensure the types are either 'multiple choice' or 'open ended'.")
+            return f"Error: No valid 'multiple choice' or 'open ended' question types found.\nPlease add a table row below table headers in your excel spreadsheet with corresponding qeustion types; either 'multiple choice' or 'open ended'."
 
 
         #remove the question type row
