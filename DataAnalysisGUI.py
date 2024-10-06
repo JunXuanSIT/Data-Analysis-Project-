@@ -8,6 +8,8 @@ from tkinter.messagebox import showinfo, showerror
 import Global_Variables as glo_vars
 import Data_Analysis_Main as main_program
 import MCQ_Cleaning as MCQ_Cleaner
+import tempfile
+import os
 
 class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
     def __init__(self, master=None):
@@ -80,8 +82,17 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
         
         print(glo_vars.df.head())
         
-        
-
+        #Open a temporary excel file for viewing
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as temp_file:
+            temp_file_path = temp_file.name
+            glo_vars.df.to_excel(temp_file_path, index=False)
+    
+        if os.name == 'nt': 
+            os.startfile(temp_file_path)
+        else:
+            showinfo(message="Automatic Excel file opening is not supported on this OS. Please open the file manually.")
+     
+            
 if __name__ == "__main__":
     app = DataAnalysisGUI()
     app.run()
