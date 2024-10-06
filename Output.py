@@ -39,6 +39,34 @@ if df_clean is not None and not df_clean.empty:
     integer_columns = get_integer_columns(df_clean)
     categorical_columns = get_categorical_columns(df_clean)
 
+    # Sidebar for filters
+    st.sidebar.header("Filter Options")
+
+    # For each column, provide a filter
+    filters = {}
+    for col in df_clean.columns:
+        if col in categorical_columns:
+            unique_vals = df_clean[col].unique()
+            selected_vals = st.sidebar.multiselect(f"Filter {col}", unique_vals, default=unique_vals)
+            filters[col] = selected_vals
+        elif col in integer_columns:
+            min_val = float(df_clean[col].min())
+            max_val = float(df_clean[col].max())
+            selected_range = st.sidebar.slider(f"Filter {col}", min_val, max_val, (min_val, max_val))
+            filters[col] = selected_range
+
+    # Apply filters to the dataframe
+    df_filtered = df_clean.copy()
+    for col, filter_val in filters.items():
+        if col in categorical_columns:
+            df_filtered = df_filtered[df_filtered[col].isin(filter_val)]
+        elif col in integer_columns:
+            df_filtered = df_filtered[(df_filtered[col] >= filter_val[0]) & (df_filtered[col] <= filter_val[1])]
+
+    # Display the filtered data
+    st.write("Filtered Data Preview:")
+    st.dataframe(df_filtered)
+
     # Graph type selection
     graph_type = st.selectbox("Select Graph Type", ["Line Graph", "Bar Graph", "Pie Chart"])
 
@@ -51,7 +79,7 @@ if df_clean is not None and not df_clean.empty:
         # Create the line graph based on user selections
         if st.button("Generate Line Graph"):
             plt.figure(figsize=(12, 6))
-            sns.lineplot(data=df_clean, x=x_axis, y=y_axis)
+            sns.lineplot(data=df_filtered, x=x_axis, y=y_axis)
             plt.title(f'Line Graph of {y_axis} vs {x_axis}')
             plt.xlabel(x_axis)
             plt.ylabel(y_axis)
@@ -69,7 +97,7 @@ if df_clean is not None and not df_clean.empty:
         # Create the bar graph based on user selections
         if st.button("Generate Bar Graph"):
             fig = px.bar(
-                df_clean,
+                df_filtered,
                 x=x_axis,
                 y=y_axis,
                 title=f'Bar Graph of {y_axis} by {x_axis}',
@@ -88,10 +116,10 @@ if df_clean is not None and not df_clean.empty:
     elif graph_type == "Pie Chart":
         # Allow user to select which mcq column to display on pie chart
         st.subheader("Pie Chart Customization")
-        selected_column = st.selectbox("Select data column", integer_columns)
+        selected_column = st.selectbox("Select data column", categorical_columns)
         
         # Count the occurrences of each response category
-        response_counts = df_clean[selected_column].value_counts().reset_index()
+        response_counts = df_filtered[selected_column].value_counts().reset_index()
         response_counts.columns = ['category', 'count']
 
         # Create the pie chart based on user selections
