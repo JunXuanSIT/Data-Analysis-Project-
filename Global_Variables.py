@@ -24,7 +24,7 @@ Indicate the first data row that you want the program to process.
 There can be columns on the left before your first data column, for ID or S/N, etc. 
 Indicate the first data column that you want the program to process.
 
-Finally, select what graph output you desire. Then click "analyze data" :D
+Finally, select what graph output you desire. Then click "analyze data" and view your graphs on your web browser :D
 
 If you want to see this screen again, click "how to use" :)
 

@@ -40,7 +40,7 @@ if df_clean is not None and not df_clean.empty:
     categorical_columns = get_categorical_columns(df_clean)
 
     # Graph type selection
-    graph_type = st.selectbox("Select Graph Type", ["Line Graph", "Bar Graph"])
+    graph_type = st.selectbox("Select Graph Type", ["Line Graph", "Bar Graph", "Pie Chart"])
 
     if graph_type == "Line Graph":
         # Allow user to select x-axis and y-axis columns for line graph
@@ -85,5 +85,18 @@ if df_clean is not None and not df_clean.empty:
             # Display the graph in Streamlit
             st.plotly_chart(fig)
 
+    elif graph_type == "Pie Chart":
+        # Allow user to select which mcq column to display on pie chart
+        st.subheader("Pie Chart Customization")
+        selected_column = st.selectbox("Select data column", integer_columns)
+        
+        # Count the occurrences of each response category
+        response_counts = df_clean[selected_column].value_counts().reset_index()
+        response_counts.columns = ['category', 'count']
+
+        # Create the pie chart based on user selections
+        if st.button("Generate Pie Chart"):
+            fig = px.pie(response_counts, values="count", names="category")
+            st.plotly_chart(fig)
 else:
     st.error("The cleaned data is empty.")
