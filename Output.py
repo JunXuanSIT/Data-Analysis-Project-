@@ -20,7 +20,14 @@ def get_categorical_columns(df):
     return df.select_dtypes(include='object').columns.tolist()
 
 # Streamlit app
-st.title("Cleaned Data Visualizations")
+st.markdown("<h1 style='text-decoration: underline;'>Cleaned Data Visualizations</h1>", unsafe_allow_html=True)
+
+
+st.markdown("### NOTE❗ ")
+st.markdown("To save the graphs as image files, **right-click** the graph and select **\"Save image as.\"**  \n"
+            "The browser processes will terminate when you close the program window.")
+
+
 
 # Load the cleaned data from command line argument
 if len(sys.argv) > 1:
