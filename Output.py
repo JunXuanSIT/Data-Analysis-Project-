@@ -23,8 +23,8 @@ def get_categorical_columns(df):
 st.markdown("<h1 style='text-decoration: underline;'>Cleaned Data Visualizations</h1>", unsafe_allow_html=True)
 
 
-st.markdown("### NOTE❗ ")
-st.markdown("To save the graphs as image files, **right-click** the graph and select **\"Save image as.\"**  \n"
+st.markdown("A reminder:")
+st.markdown("To save the graphs as image files, right-click the graph and select \"Save image as.\"  \n"
             "The browser processes will terminate when you close the program window.")
 
 

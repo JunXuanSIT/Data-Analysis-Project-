@@ -63,10 +63,6 @@ class DataAnalysisGUI(baseui.DataAnalysisGUI_UI):
             showerror(message="Spreadsheet row & column numbers must be an integer greater than 0.")
             return
 
-        # get int value for graph output type
-        graphsOutputType = app.genGraphsOutputType.get()
-        print(f"Graph output type selection: {graphsOutputType}")
-
         # parse spreadsheet to obtain data frame, df
         result = main_program.parse_data(dataFirstRow, dataFirstCol)
         if result != "success":
